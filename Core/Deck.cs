@@ -5,11 +5,11 @@ namespace CrazyRisk.Core
 {
     public class Deck
     {
-        private Queue<Card> cards;
+        private CrazyRisk.DataStructures.Queue<Card> cards;
         
         public Deck()
         {
-            cards = new Queue<Card>();
+            cards = new CrazyRisk.DataStructures.Queue<Card>();
             InitializeDeck();
         }
         

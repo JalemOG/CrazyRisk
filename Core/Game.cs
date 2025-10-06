@@ -1,23 +1,24 @@
 using CrazyRisk.DataStructures;
+using PlayerLinkedList = CrazyRisk.DataStructures.LinkedList<CrazyRisk.Core.Player>;
 
 namespace CrazyRisk.Core
 {
     public class Game
     {
-        public Map Map { get; set; }
-        public LinkedList<Player> Players { get; set; }
+        public PlayerLinkedList Players { get; set; }
         public Deck Deck { get; set; }
         public TurnManager TurnManager { get; set; }
         public int GlobalTradeCounter { get; set; }
         public GameState State { get; set; }
-        
+        public Map Map { get; set; }
         public Game()
         {
-            Map = new Map();
-            Players = new LinkedList<Player>();
+            Players = new PlayerLinkedList();
             Deck = new Deck();
+            TurnManager = new TurnManager(Players);
             GlobalTradeCounter = 2;
             State = GameState.Setup;
+            Map = new Map();
         }
         
         public void StartGame()
@@ -47,7 +48,7 @@ namespace CrazyRisk.Core
             }
         }
         
-        public Player CheckVictory()
+        public Player? CheckVictory()
         {
             IIterator<Player> iterator = Players.GetIterator();
             while (iterator.HasNext())

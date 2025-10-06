@@ -5,14 +5,14 @@ namespace CrazyRisk.Core
     public class Territory
     {
         public string Name { get; set; }
-        public Player Owner { get; set; }
+        public Player? Owner { get; set; }
         public int Troops { get; set; }
-        public LinkedList<Territory> AdjacentTerritories { get; set; }
+        public System.Collections.Generic.LinkedList<Territory> AdjacentTerritories { get; set; }
         
         public Territory(string name)
         {
             Name = name;
-            AdjacentTerritories = new LinkedList<Territory>();
+            AdjacentTerritories = new System.Collections.Generic.LinkedList<Territory>();
             Troops = 0;
         }
         

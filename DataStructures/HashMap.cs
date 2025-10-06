@@ -4,124 +4,138 @@ namespace CrazyRisk.DataStructures
 {
     public class HashMap<K, V>
     {
+        // Clase interna para las entradas del mapa
         private class Entry
         {
             public K Key { get; set; }
             public V Value { get; set; }
-            
+
             public Entry(K key, V value)
             {
                 Key = key;
                 Value = value;
             }
-            
+
             public override bool Equals(object obj)
             {
-                if (obj is Entry other)
-                    return Key.Equals(other.Key);
-                return false;
+                return obj is Entry other && Key.Equals(other.Key);
             }
-            
+
             public override int GetHashCode()
             {
                 return Key.GetHashCode();
             }
         }
-        
+
         private LinkedList<Entry>[] buckets;
         private int capacity;
         private int size;
-        
-        public HashMap(int capacity = 16)
+        private const int DEFAULT_CAPACITY = 16;
+
+        public HashMap(int capacity = DEFAULT_CAPACITY)
         {
             this.capacity = capacity;
             buckets = new LinkedList<Entry>[capacity];
+            for (int i = 0; i < capacity; i++)
+                buckets[i] = new LinkedList<Entry>();
             size = 0;
         }
-        
-        public int Size { get { return size; } }
-        
+
         private int GetBucketIndex(K key)
         {
-            int hashCode = key.GetHashCode();
-            return Math.Abs(hashCode) % capacity;
+            return Math.Abs(key.GetHashCode()) % capacity;
         }
-        
+
+        // Agregar o actualizar un valor
         public void Put(K key, V value)
         {
-            int bucketIndex = GetBucketIndex(key);
-            
-            if (buckets[bucketIndex] == null)
-                buckets[bucketIndex] = new LinkedList<Entry>();
-                
-            LinkedList<Entry> bucket = buckets[bucketIndex];
-            Entry newEntry = new Entry(key, value);
-            Node<Entry> existing = bucket.Find(newEntry);
-            
+            int index = GetBucketIndex(key);
+            LinkedList<Entry> bucket = buckets[index];
+
+            Entry existing = bucket.Find(e => e.Key.Equals(key));
             if (existing != null)
             {
-                existing.Value.Value = value;
+                existing.Value = value; // Actualizar valor existente
             }
             else
             {
-                bucket.Add(newEntry);
+                bucket.Add(new Entry(key, value));
                 size++;
             }
         }
-        
+
+        // Obtener un valor
         public V Get(K key)
         {
-            int bucketIndex = GetBucketIndex(key);
-            
-            if (buckets[bucketIndex] == null)
-                return default(V);
-                
-            LinkedList<Entry> bucket = buckets[bucketIndex];
-            Entry searchEntry = new Entry(key, default(V));
-            Node<Entry> result = bucket.Find(searchEntry);
-            
-            return result != null ? result.Value.Value : default(V);
+            int index = GetBucketIndex(key);
+            LinkedList<Entry> bucket = buckets[index];
+
+            Entry existing = bucket.Find(e => e.Key.Equals(key));
+            return existing != null ? existing.Value : default(V);
         }
-        
+
+        // Verificar si contiene una clave
         public bool ContainsKey(K key)
         {
-            return Get(key) != null;
+            int index = GetBucketIndex(key);
+            LinkedList<Entry> bucket = buckets[index];
+            return bucket.Find(e => e.Key.Equals(key)) != null;
         }
-        
+
+        // Remover una entrada
         public bool Remove(K key)
         {
-            int bucketIndex = GetBucketIndex(key);
-            
-            if (buckets[bucketIndex] == null)
-                return false;
-                
-            LinkedList<Entry> bucket = buckets[bucketIndex];
-            Entry entryToRemove = new Entry(key, default(V));
-            
-            bool removed = bucket.Remove(entryToRemove);
-            if (removed)
+            int index = GetBucketIndex(key);
+            LinkedList<Entry> bucket = buckets[index];
+
+            Entry existing = bucket.Find(e => e.Key.Equals(key));
+            if (existing != null)
+            {
+                bucket.Remove(existing);
                 size--;
-                
-            return removed;
+                return true;
+            }
+            return false;
         }
-        
+
+        // Obtener todas las claves
         public LinkedList<K> Keys()
         {
             LinkedList<K> keys = new LinkedList<K>();
-            
-            for (int i = 0; i < capacity; i++)
+            foreach (var bucket in buckets)
             {
-                if (buckets[i] != null)
-                {
-                    IIterator<Entry> iterator = buckets[i].GetIterator();
-                    while (iterator.HasNext())
-                    {
-                        keys.Add(iterator.Next().Key);
-                    }
-                }
+                IIterator<Entry> it = bucket.GetIterator();
+                while (it.HasNext())
+                    keys.Add(it.Next().Key);
             }
-            
             return keys;
+        }
+
+        // Obtener todos los valores
+        public LinkedList<V> Values()
+        {
+            LinkedList<V> values = new LinkedList<V>();
+            foreach (var bucket in buckets)
+            {
+                IIterator<Entry> it = bucket.GetIterator();
+                while (it.HasNext())
+                    values.Add(it.Next().Value);
+            }
+            return values;
+        }
+
+        // Obtener tamaño
+        public int Size() => size;
+
+        // Verificar si está vacío
+        public bool IsEmpty() => size == 0;
+
+        // Limpiar el mapa
+        public void Clear()
+        {
+            foreach (var bucket in buckets)
+                bucket.Clear();
+            size = 0;
         }
     }
 }

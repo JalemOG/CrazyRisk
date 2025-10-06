@@ -7,8 +7,8 @@ namespace CrazyRisk.DataStructures
         private Node<T> head;
         private int count;
         
-        public int Count { get { return count; } }
-        public bool IsEmpty { get { return count == 0; } }
+        public int Count => count;
+        public bool IsEmpty => count == 0;
         
         internal Node<T> GetHead()
         {
@@ -39,7 +39,7 @@ namespace CrazyRisk.DataStructures
         {
             if (head == null) return false;
             
-            if (head.Value.Equals(value))
+            if (head != null && head.Value != null && head.Value.Equals(value))
             {
                 head = head.Next;
                 count--;
@@ -61,9 +61,9 @@ namespace CrazyRisk.DataStructures
             return false;
         }
         
-        public Node<T> Find(T value)
+        public Node<T>? Find(T value)
         {
-            Node<T> current = head;
+            Node<T>? current = head;
             while (current != null)
             {
                 if (current.Value.Equals(value))
@@ -95,10 +95,15 @@ namespace CrazyRisk.DataStructures
         
         public IIterator<T> GetIterator()
         {
-            return new LinkedListIterator<T>(this);
+            return new LinkedListIterator(this);
         }
-        
-        private class LinkedListIterator<T> : IIterator<T>
+
+        internal int Size()
+        {
+            throw new NotImplementedException();
+        }
+
+        private class LinkedListIterator : IIterator<T>
         {
             private Node<T> current;
             

@@ -7,8 +7,8 @@ namespace CrazyRisk.DataStructures
         private Node<T> top;
         private int count;
         
-        public int Count { get { return count; } }
-        public bool IsEmpty { get { return count == 0; } }
+        public int Count => count;
+        public bool IsEmpty => count == 0;
         
         public void Push(T value)
         {
@@ -35,6 +35,34 @@ namespace CrazyRisk.DataStructures
                 throw new InvalidOperationException("Stack is empty");
                 
             return top.Value;
+        }
+
+        // Iterador para compatibilidad con IIterator<T>
+        public IIterator<T> GetIterator()
+        {
+            return new StackIterator(this);
+        }
+
+        private class StackIterator : IIterator<T>
+        {
+            private Node<T> current;
+
+            public StackIterator(Stack<T> stack)
+            {
+                current = stack.top;
+            }
+
+            public bool HasNext() => current != null;
+
+            public T Next()
+            {
+                if (current == null)
+                    throw new InvalidOperationException("No more elements");
+
+                T value = current.Value;
+                current = current.Next;
+                return value;
+            }
         }
     }
 }

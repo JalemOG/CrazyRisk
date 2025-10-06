@@ -5,13 +5,13 @@ namespace CrazyRisk.Core
 {
     public class Map
     {
-        public LinkedList<Continent> Continents { get; set; }
-        public LinkedList<Territory> Territories { get; set; }
+        public CrazyRisk.DataStructures.LinkedList<Continent> Continents { get; set; }
+        public CrazyRisk.DataStructures.LinkedList<Territory> Territories { get; set; }
         
         public Map()
         {
-            Continents = new LinkedList<Continent>();
-            Territories = new LinkedList<Territory>();
+            Continents = new CrazyRisk.DataStructures.LinkedList<Continent>();
+            Territories = new CrazyRisk.DataStructures.LinkedList<Territory>();
         }
         
         // Agregar territorio al mapa
@@ -37,13 +37,13 @@ namespace CrazyRisk.Core
         }
         
         // Obtener territorios adyacentes
-        public LinkedList<Territory> GetAdjacent(Territory territory)
+        public CrazyRisk.DataStructures.LinkedList<Territory> GetAdjacent(Territory territory)
         {
             return territory.AdjacentTerritories;
         }
         
         // Buscar continente por nombre
-        public Continent GetContinent(string name)
+        public Continent? GetContinent(string name)
         {
             IIterator<Continent> iterator = Continents.GetIterator();
             while (iterator.HasNext())
@@ -56,7 +56,7 @@ namespace CrazyRisk.Core
         }
         
         // Buscar territorio por nombre
-        public Territory GetTerritory(string name)
+        public Territory? GetTerritory(string name)
         {
             IIterator<Territory> iterator = Territories.GetIterator();
             while (iterator.HasNext())
@@ -83,12 +83,12 @@ namespace CrazyRisk.Core
                 
             // BFS para encontrar camino
             HashMap<Territory, bool> visited = new HashMap<Territory, bool>();
-            Queue<Territory> queue = new Queue<Territory>();
+            CrazyRisk.DataStructures.Queue<Territory> queue = new CrazyRisk.DataStructures.Queue<Territory>();
             
             queue.Enqueue(origin);
             visited.Put(origin, true);
             
-            while (!queue.IsEmpty())
+            while (!queue.IsEmpty)
             {
                 Territory current = queue.Dequeue();
                 
@@ -114,9 +114,9 @@ namespace CrazyRisk.Core
         }
         
         // Obtener todos los territorios de un jugador
-        public LinkedList<Territory> GetPlayerTerritories(Player player)
+        public CrazyRisk.DataStructures.LinkedList<Territory> GetPlayerTerritories(Player player)
         {
-            LinkedList<Territory> playerTerritories = new LinkedList<Territory>();
+            CrazyRisk.DataStructures.LinkedList<Territory> playerTerritories = new CrazyRisk.DataStructures.LinkedList<Territory>();
             IIterator<Territory> iterator = Territories.GetIterator();
             
             while (iterator.HasNext())
@@ -177,7 +177,7 @@ namespace CrazyRisk.Core
         }
         
         // Distribuir territorios aleatoriamente entre jugadores
-        public void DistributeTerritories(LinkedList<Player> players)
+        public void DistributeTerritories(CrazyRisk.DataStructures.LinkedList<Player> players)
         {
             // Convertir territorios a array para facilitar el shuffle
             Territory[] territoryArray = new Territory[Territories.Size()];
@@ -223,9 +223,9 @@ namespace CrazyRisk.Core
         }
         
         // Obtener territorios desde los cuales un jugador puede atacar
-        public LinkedList<Territory> GetAttackableTerritories(Player player)
+        public CrazyRisk.DataStructures.LinkedList<Territory> GetAttackableTerritories(Player player)
         {
-            LinkedList<Territory> attackable = new LinkedList<Territory>();
+            CrazyRisk.DataStructures.LinkedList<Territory> attackable = new CrazyRisk.DataStructures.LinkedList<Territory>();
             IIterator<Territory> iterator = Territories.GetIterator();
             
             while (iterator.HasNext())
@@ -239,9 +239,9 @@ namespace CrazyRisk.Core
         }
         
         // Obtener territorios enemigos adyacentes a un territorio dado
-        public LinkedList<Territory> GetAdjacentEnemyTerritories(Territory territory)
+        public CrazyRisk.DataStructures.LinkedList<Territory> GetAdjacentEnemyTerritories(Territory territory)
         {
-            LinkedList<Territory> enemies = new LinkedList<Territory>();
+            CrazyRisk.DataStructures.LinkedList<Territory> enemies = new CrazyRisk.DataStructures.LinkedList<Territory>();
             IIterator<Territory> iterator = territory.AdjacentTerritories.GetIterator();
             
             while (iterator.HasNext())
@@ -255,9 +255,9 @@ namespace CrazyRisk.Core
         }
         
         // Obtener territorios amigos adyacentes a un territorio dado
-        public LinkedList<Territory> GetAdjacentFriendlyTerritories(Territory territory)
+        public CrazyRisk.DataStructures.LinkedList<Territory> GetAdjacentFriendlyTerritories(Territory territory)
         {
-            LinkedList<Territory> friends = new LinkedList<Territory>();
+            CrazyRisk.DataStructures.LinkedList<Territory> friends = new CrazyRisk.DataStructures.LinkedList<Territory>();
             IIterator<Territory> iterator = territory.AdjacentTerritories.GetIterator();
             
             while (iterator.HasNext())

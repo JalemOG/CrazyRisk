@@ -6,13 +6,13 @@ namespace CrazyRisk.Core
     {
         public string Name { get; set; }
         public int Bonus { get; set; }
-        public LinkedList<Territory> Territories { get; set; }
+        public CrazyRisk.DataStructures.LinkedList<Territory> Territories { get; set; }
         
         public Continent(string name, int bonus)
         {
             Name = name;
             Bonus = bonus;
-            Territories = new LinkedList<Territory>();
+            Territories = new CrazyRisk.DataStructures.LinkedList<Territory>();
         }
         
         public bool IsControlledBy(Player player)

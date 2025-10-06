@@ -8,8 +8,8 @@ namespace CrazyRisk.DataStructures
         private Node<T> rear;
         private int count;
         
-        public int Count { get { return count; } }
-        public bool IsEmpty { get { return count == 0; } }
+        public int Count => count;
+        public bool IsEmpty => count == 0;
         
         public void Enqueue(T value)
         {
@@ -48,6 +48,34 @@ namespace CrazyRisk.DataStructures
                 throw new InvalidOperationException("Queue is empty");
                 
             return front.Value;
+        }
+
+        // Iterador para compatibilidad con IIterator<T>
+        public IIterator<T> GetIterator()
+        {
+            return new QueueIterator(this);
+        }
+
+        private class QueueIterator : IIterator<T>
+        {
+            private Node<T> current;
+
+            public QueueIterator(Queue<T> queue)
+            {
+                current = queue.front;
+            }
+
+            public bool HasNext() => current != null;
+
+            public T Next()
+            {
+                if (current == null)
+                    throw new InvalidOperationException("No more elements");
+
+                T value = current.Value;
+                current = current.Next;
+                return value;
+            }
         }
     }
 }

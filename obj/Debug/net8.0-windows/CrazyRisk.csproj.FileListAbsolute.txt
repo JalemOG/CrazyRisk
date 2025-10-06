@@ -1,0 +1,4 @@
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfoInputs.cache
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfo.cs
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.csproj.CoreCompileInputs.cache
