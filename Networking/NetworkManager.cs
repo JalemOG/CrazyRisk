@@ -1,69 +1,109 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace CrazyRisk.Networking
 {
-    public class NetworkManager
+    /// <summary>
+    /// Encapsula la conexión como servidor o cliente y expone operaciones seguras sobre el stream.
+    /// Evita nullability warnings validando server/client/stream antes de usarlos.
+    /// </summary>
+    public class NetworkManager : IDisposable
     {
-        private bool isServer;
-        private TcpListener server;
-        private TcpClient client;
-        private NetworkStream stream;
-        
-        public NetworkManager(bool isServer)
+        private TcpListener?  server;   // null hasta StartServer()
+        private TcpClient?    client;   // null hasta Connect()/AcceptClient()
+        private NetworkStream? stream;  // null hasta tener client
+
+        public bool IsServer { get; private set; }
+        public bool IsConnected => stream is not null && client is not null && client.Connected;
+
+        /// <summary>
+        /// Inicia un servidor TCP en el puerto indicado.
+        /// </summary>
+        public void StartServer(int port, IPAddress? address = null, int backlog = 10)
         {
-            this.isServer = isServer;
+            if (server is not null)
+                throw new InvalidOperationException("El servidor ya está iniciado.");
+
+            IsServer = true;
+            address ??= IPAddress.Any;
+
+            server = new TcpListener(address, port);
+            server.Start(backlog);
         }
-        
-        public void StartServer(string ip, int port)
+
+        /// <summary>
+        /// Acepta un cliente entrante (bloqueante).
+        /// </summary>
+        public void AcceptClient()
         {
-            if (!isServer) return;
-            
-            server = new TcpListener(IPAddress.Parse(ip), port);
-            server.Start();
-            Console.WriteLine("Servidor iniciado...");
-        }
-        
-        public void ConnectClient(string ip, int port)
-        {
-            if (isServer) return;
-            
-            client = new TcpClient();
-            client.Connect(ip, port);
+            if (server is null)
+                throw new InvalidOperationException("Servidor no iniciado. Llama a StartServer primero.");
+
+            client = server.AcceptTcpClient();
             stream = client.GetStream();
-            Console.WriteLine("Conectado al servidor...");
         }
-        
-        public void SendMessage(Message msg)
+
+        /// <summary>
+        /// Conecta como cliente a un host/puerto.
+        /// </summary>
+        public void Connect(string host, int port)
         {
-            string data = msg.Serialize();
-            byte[] buffer = Encoding.UTF8.GetBytes(data);
-            
-            if (isServer && client != null)
-            {
-                stream.Write(buffer, 0, buffer.Length);
-            }
-            else if (!isServer && stream != null)
-            {
-                stream.Write(buffer, 0, buffer.Length);
-            }
+            if (client is not null)
+                throw new InvalidOperationException("Cliente ya conectado o en uso.");
+
+            IsServer = false;
+
+            var c = new TcpClient();
+            c.Connect(host, port);
+            client = c;
+            stream = client.GetStream();
         }
-        
-        public Message ReceiveMessage()
+
+        /// <summary>
+        /// Envía bytes por el stream activo.
+        /// </summary>
+        public void Send(byte[] data, int offset = 0, int? count = null)
         {
-            byte[] buffer = new byte[1024];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            string data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            return Message.Deserialize(data);
+            if (stream is null)
+                throw new InvalidOperationException("No hay conexión activa (stream == null).");
+
+            int len = count ?? data.Length;
+            stream.Write(data, offset, len);
+            stream.Flush();
         }
-        
-        public void CloseConnection()
+
+        /// <summary>
+        /// Lee bytes del stream activo y devuelve la cantidad leída.
+        /// </summary>
+        public int Receive(byte[] buffer, int offset = 0, int? count = null)
         {
-            stream?.Close();
-            client?.Close();
-            server?.Stop();
+            if (stream is null)
+                throw new InvalidOperationException("No hay conexión activa (stream == null).");
+
+            int len = count ?? buffer.Length;
+            return stream.Read(buffer, offset, len);
+        }
+
+        /// <summary>
+        /// Cierra conexiones y libera recursos.
+        /// </summary>
+        public void Close()
+        {
+            try { stream?.Close(); } catch { /* ignore */ }
+            try { client?.Close(); } catch { /* ignore */ }
+            try { server?.Stop(); } catch { /* ignore */ }
+
+            stream = null;
+            client = null;
+            server = null;
+            IsServer = false;
+        }
+
+        public void Dispose()
+        {
+            Close();
+            GC.SuppressFinalize(this);
         }
     }
 }

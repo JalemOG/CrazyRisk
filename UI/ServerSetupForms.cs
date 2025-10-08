@@ -4,188 +4,73 @@ using System.Windows.Forms;
 
 namespace CrazyRisk.UI
 {
+    // Asegúrate de que SOLO exista esta clase en el archivo
     public class ServerSetupForm : Form
     {
-    public class ServerSetupForm : Form
-    {
-        private TextBox txtPlayerName;
-        private ComboBox cmbPlayerColor;
-        private TextBox txtPort;
-        private CheckBox chkIncludeNeutral;
-        private Button btnStart;
-        private Button btnCancel;
-        private GameConfiguration config;
-        
+        // Campos inicializados con null-forgiving para evitar CS8618
+        private TextBox   txtPlayerName     = null!;
+        private ComboBox  cmbPlayerColor    = null!;
+        private TextBox   txtPort           = null!;
+        private CheckBox  chkIncludeNeutral = null!;
+        private Button    btnStart          = null!;
+        private Button    btnCancel         = null!;
+        private GameConfiguration config    = null!; // si tu clase está en este namespace
+
         public ServerSetupForm()
         {
-            InitializeComponents();
+            InitializeComponent();
         }
-        
-        private void InitializeComponents()
+
+        private void InitializeComponent()
         {
-            this.Text = "Crear Partida - Configuración";
-            this.Size = new Size(500, 400);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.BackColor = Color.FromArgb(40, 40, 50);
-            
-            // Título
-            Label titleLabel = new Label
-            {
-                Text = "CONFIGURAR SERVIDOR",
-                Font = new Font("Arial", 20, FontStyle.Bold),
-                ForeColor = Color.White,
-                AutoSize = false,
-                Size = new Size(460, 40),
-                Location = new Point(20, 20),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-            
-            // Nombre del jugador
-            Label lblName = CreateLabel("Nombre del Jugador:", 80);
-            txtPlayerName = CreateTextBox(110);
-            txtPlayerName.Text = "Servidor";
-            
-            // Color del jugador
-            Label lblColor = CreateLabel("Color:", 150);
-            cmbPlayerColor = new ComboBox
-            {
-                Location = new Point(180, 150),
-                Size = new Size(200, 30),
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = new Font("Arial", 12)
-            };
-            cmbPlayerColor.Items.AddRange(new object[] { "Rojo", "Azul", "Verde", "Amarillo", "Morado" });
-            cmbPlayerColor.SelectedIndex = 0;
-            
-            // Puerto
-            Label lblPort = CreateLabel("Puerto:", 190);
-            txtPort = CreateTextBox(220);
-            txtPort.Text = "5000";
-            txtPort.MaxLength = 5;
-            
-            // Incluir ejército neutral
-            chkIncludeNeutral = new CheckBox
-            {
-                Text = "Incluir Ejército Neutral",
-                Location = new Point(50, 260),
-                Size = new Size(300, 30),
-                Font = new Font("Arial", 12),
-                ForeColor = Color.White,
-                Checked = true
-            };
-            
-            // Botones
-            btnStart = new Button
-            {
-                Text = "INICIAR SERVIDOR",
-                Size = new Size(200, 40),
-                Location = new Point(50, 310),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                BackColor = Color.FromArgb(70, 150, 70),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            
-            btnCancel = new Button
-            {
-                Text = "CANCELAR",
-                Size = new Size(200, 40),
-                Location = new Point(260, 310),
-                Font = new Font("Arial", 12, FontStyle.Bold),
-                BackColor = Color.FromArgb(150, 70, 70),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            
+            Text = "CrazyRisk - Crear partida (Servidor)";
+            StartPosition = FormStartPosition.CenterParent;
+            ClientSize = new Size(520, 340);
+            Padding = new Padding(16);
+
+            var lblName = new Label { Text = "Nombre:", AutoSize = true, Location = new Point(30, 30) };
+            txtPlayerName = new TextBox { Location = new Point(220, 26), Width = 250 };
+
+            var lblColor = new Label { Text = "Color:", AutoSize = true, Location = new Point(30, 70) };
+            cmbPlayerColor = new ComboBox { Location = new Point(220, 66), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            cmbPlayerColor.Items.AddRange(new object[] { "Rojo", "Azul", "Verde", "Amarillo", "Negro" });
+
+            var lblPort = new Label { Text = "Puerto:", AutoSize = true, Location = new Point(30, 110) };
+            txtPort = new TextBox { Location = new Point(220, 106), Width = 250, Text = "7777" };
+
+            chkIncludeNeutral = new CheckBox { Text = "Incluir ejército neutral", Location = new Point(220, 146), AutoSize = true };
+
+            btnStart = new Button { Text = "Iniciar servidor", Location = new Point(220, 200), Size = new Size(140, 32) };
+            btnCancel = new Button { Text = "Cancelar", Location = new Point(380, 200), Size = new Size(90, 32) };
+
             btnStart.Click += BtnStart_Click;
-            btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
-            
-            // Agregar controles
-            this.Controls.Add(titleLabel);
-            this.Controls.Add(lblName);
-            this.Controls.Add(txtPlayerName);
-            this.Controls.Add(lblColor);
-            this.Controls.Add(cmbPlayerColor);
-            this.Controls.Add(lblPort);
-            this.Controls.Add(txtPort);
-            this.Controls.Add(chkIncludeNeutral);
-            this.Controls.Add(btnStart);
-            this.Controls.Add(btnCancel);
+            btnCancel.Click += BtnCancel_Click;
+
+            Controls.Add(lblName);
+            Controls.Add(txtPlayerName);
+            Controls.Add(lblColor);
+            Controls.Add(cmbPlayerColor);
+            Controls.Add(lblPort);
+            Controls.Add(txtPort);
+            Controls.Add(chkIncludeNeutral);
+            Controls.Add(btnStart);
+            Controls.Add(btnCancel);
+
+            config = new GameConfiguration();
         }
-        
-        private Label CreateLabel(string text, int yPosition)
+
+        private void BtnStart_Click(object? sender, EventArgs e)
         {
-            return new Label
-            {
-                Text = text,
-                Location = new Point(50, yPosition),
-                Size = new Size(300, 25),
-                Font = new Font("Arial", 12),
-                ForeColor = Color.White
-            };
+            // Aquí validas y dejas listo 'config' para el servidor
+            // p.ej.: config.PlayerName = txtPlayerName.Text; config.Port = int.Parse(txtPort.Text); etc.
+            DialogResult = DialogResult.OK;
+            Close();
         }
-        
-        private TextBox CreateTextBox(int yPosition)
+
+        private void BtnCancel_Click(object? sender, EventArgs e)
         {
-            return new TextBox
-            {
-                Location = new Point(180, yPosition),
-                Size = new Size(200, 30),
-                Font = new Font("Arial", 12)
-            };
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
-        
-        private void BtnStart_Click(object sender, EventArgs e)
-        {
-            // Validar campos
-            if (string.IsNullOrWhiteSpace(txtPlayerName.Text))
-            {
-                MessageBox.Show("Por favor ingrese un nombre", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            
-            if (!int.TryParse(txtPort.Text, out int port) || port < 1024 || port > 65535)
-            {
-                MessageBox.Show("Puerto inválido (1024-65535)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            
-            // Crear configuración
-            config = new GameConfiguration
-            {
-                PlayerName = txtPlayerName.Text,
-                PlayerColor = GetSelectedColor(),
-                Port = port,
-                IncludeNeutral = chkIncludeNeutral.Checked,
-                IsServer = true
-            };
-            
-            this.DialogResult = DialogResult.OK;
-        }
-        
-        private ConsoleColor GetSelectedColor()
-        {
-            switch (cmbPlayerColor.SelectedIndex)
-            {
-                case 0: return ConsoleColor.Red;
-                case 1: return ConsoleColor.Blue;
-                case 2: return ConsoleColor.Green;
-                case 3: return ConsoleColor.Yellow;
-                case 4: return ConsoleColor.Magenta;
-                default: return ConsoleColor.Red;
-            }
-        }
-        
-        public GameConfiguration GetGameConfig()
-        {
-            return config;
-        }
-    }
-    
     }
 }

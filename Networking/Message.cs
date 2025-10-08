@@ -3,7 +3,7 @@ namespace CrazyRisk.Networking
     public class Message
     {
         public MessageAction Action { get; set; }
-        public object Payload { get; set; }
+        public object Payload { get; set; } = string.Empty;
         
         public string Serialize()
         {

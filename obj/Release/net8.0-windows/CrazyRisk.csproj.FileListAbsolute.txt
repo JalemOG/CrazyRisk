@@ -1,0 +1,14 @@
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.AssemblyInfoInputs.cache
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.AssemblyInfo.cs
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.csproj.CoreCompileInputs.cache
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Release\net8.0-windows\CrazyRisk.exe
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Release\net8.0-windows\CrazyRisk.deps.json
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Release\net8.0-windows\CrazyRisk.runtimeconfig.json
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Release\net8.0-windows\CrazyRisk.dll
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Release\net8.0-windows\CrazyRisk.pdb
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.dll
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\refint\CrazyRisk.dll
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.pdb
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\CrazyRisk.genruntimeconfig.cache
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Release\net8.0-windows\ref\CrazyRisk.dll

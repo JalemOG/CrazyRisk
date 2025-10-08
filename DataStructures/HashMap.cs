@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 
 namespace CrazyRisk.DataStructures
 {
     public class HashMap<K, V>
     {
-        // Clase interna para las entradas del mapa
+        private readonly LinkedList<Entry>[] buckets;
+        private readonly int capacity;
+        private int size;
+
         private class Entry
         {
             public K Key { get; set; }
@@ -16,121 +20,127 @@ namespace CrazyRisk.DataStructures
                 Value = value;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
-                return obj is Entry other && Key.Equals(other.Key);
+                return obj is Entry other &&
+                       EqualityComparer<K>.Default.Equals(Key, other.Key);
             }
 
             public override int GetHashCode()
             {
-                return Key.GetHashCode();
+                return EqualityComparer<K>.Default.GetHashCode(Key!);
             }
         }
 
-        private LinkedList<Entry>[] buckets;
-        private int capacity;
-        private int size;
-        private const int DEFAULT_CAPACITY = 16;
-
-        public HashMap(int capacity = DEFAULT_CAPACITY)
+        public HashMap(int capacity = 16)
         {
+            if (capacity <= 0) capacity = 16;
+
             this.capacity = capacity;
             buckets = new LinkedList<Entry>[capacity];
             for (int i = 0; i < capacity; i++)
                 buckets[i] = new LinkedList<Entry>();
-            size = 0;
         }
 
-        private int GetBucketIndex(K key)
+        private int Index(K key)
         {
-            return Math.Abs(key.GetHashCode()) % capacity;
+            int h = EqualityComparer<K>.Default.GetHashCode(key!);
+            if (h < 0) h = -h;
+            return h % capacity;
         }
 
-        // Agregar o actualizar un valor
+        // ⬇⬇⬇  Put NO devuelve nada; elimina cualquier return algo; que tuvieras
         public void Put(K key, V value)
         {
-            int index = GetBucketIndex(key);
-            LinkedList<Entry> bucket = buckets[index];
+            int idx = Index(key);
+            var bucket = buckets[idx];
 
-            Entry existing = bucket.Find(e => e.Key.Equals(key));
-            if (existing != null)
+            var existing = bucket.Find(e => EqualityComparer<K>.Default.Equals(e.Key, key));
+            if (existing is not null)
             {
-                existing.Value = value; // Actualizar valor existente
+                existing.Value = value;
+                return;
             }
-            else
+
+            bucket.Add(new Entry(key, value));
+            size++;
+        }
+
+        public bool TryGet(K key, out V value)
+        {
+            int idx = Index(key);
+            var bucket = buckets[idx];
+            var entry = bucket.Find(e => EqualityComparer<K>.Default.Equals(e.Key, key));
+
+            if (entry is not null)
             {
-                bucket.Add(new Entry(key, value));
-                size++;
-            }
-        }
-
-        // Obtener un valor
-        public V Get(K key)
-        {
-            int index = GetBucketIndex(key);
-            LinkedList<Entry> bucket = buckets[index];
-
-            Entry existing = bucket.Find(e => e.Key.Equals(key));
-            return existing != null ? existing.Value : default(V);
-        }
-
-        // Verificar si contiene una clave
-        public bool ContainsKey(K key)
-        {
-            int index = GetBucketIndex(key);
-            LinkedList<Entry> bucket = buckets[index];
-            return bucket.Find(e => e.Key.Equals(key)) != null;
-        }
-
-        // Remover una entrada
-        public bool Remove(K key)
-        {
-            int index = GetBucketIndex(key);
-            LinkedList<Entry> bucket = buckets[index];
-
-            Entry existing = bucket.Find(e => e.Key.Equals(key));
-            if (existing != null)
-            {
-                bucket.Remove(existing);
-                size--;
+                value = entry.Value;
                 return true;
             }
+
+            value = default!;
             return false;
         }
 
-        // Obtener todas las claves
+        public V Get(K key)
+        {
+            if (TryGet(key, out var v))
+                return v;
+            throw new KeyNotFoundException($"Key not found: {key}");
+        }
+
+        public bool ContainsKey(K key)
+        {
+            int idx = Index(key);
+            var bucket = buckets[idx];
+            return bucket.Find(e => EqualityComparer<K>.Default.Equals(e.Key, key)) is not null;
+        }
+
+        public bool Remove(K key)
+        {
+            int idx = Index(key);
+            var bucket = buckets[idx];
+
+            var entry = bucket.Find(e => EqualityComparer<K>.Default.Equals(e.Key, key));
+            if (entry is null) return false;
+
+            bucket.Remove(entry);
+            size--;
+            return true;
+        }
+
+        public int Count => size;
+
         public LinkedList<K> Keys()
         {
-            LinkedList<K> keys = new LinkedList<K>();
+            var keys = new LinkedList<K>();
             foreach (var bucket in buckets)
             {
-                IIterator<Entry> it = bucket.GetIterator();
+                var it = bucket.GetIterator();
                 while (it.HasNext())
-                    keys.Add(it.Next().Key);
+                {
+                    var e = it.Next();
+                    keys.Add(e.Key);
+                }
             }
             return keys;
         }
 
-        // Obtener todos los valores
         public LinkedList<V> Values()
         {
-            LinkedList<V> values = new LinkedList<V>();
+            var values = new LinkedList<V>();
             foreach (var bucket in buckets)
             {
-                IIterator<Entry> it = bucket.GetIterator();
+                var it = bucket.GetIterator();
                 while (it.HasNext())
-                    values.Add(it.Next().Value);
+                {
+                    var e = it.Next();
+                    values.Add(e.Value);
+                }
             }
             return values;
         }
 
-        // Obtener tamaño
-        public int Size() => size;
-
-        // Verificar si está vacío
-        public bool IsEmpty() => size == 0;
-
-        // Limpiar el mapa
         public void Clear()
         {
             foreach (var bucket in buckets)

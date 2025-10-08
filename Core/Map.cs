@@ -180,7 +180,7 @@ namespace CrazyRisk.Core
         public void DistributeTerritories(CrazyRisk.DataStructures.LinkedList<Player> players)
         {
             // Convertir territorios a array para facilitar el shuffle
-            Territory[] territoryArray = new Territory[Territories.Size()];
+            Territory[] territoryArray = new Territory[Territories.Count];
             IIterator<Territory> territoryIterator = Territories.GetIterator();
             int index = 0;
             
@@ -201,7 +201,7 @@ namespace CrazyRisk.Core
             
             // Distribuir territorios equitativamente
             int playerIndex = 0;
-            Player[] playerArray = new Player[players.Size()];
+            Player[] playerArray = new Player[players.Count];
             IIterator<Player> playerIterator = players.GetIterator();
             int pIndex = 0;
             

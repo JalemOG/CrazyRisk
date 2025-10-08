@@ -3,7 +3,7 @@ namespace CrazyRisk.Core
     public class Card
     {
         public CardType Type { get; set; }
-        public Territory Territory { get; set; }
+        public Territory Territory { get; set; } = null!;
         
         public bool CanTradeWith(Card c2, Card c3)
         {

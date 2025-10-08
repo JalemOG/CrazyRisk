@@ -8,24 +8,22 @@ namespace CrazyRisk.DataStructures
 
     public class LinkedListIterator<T> : IIterator<T>
     {
-        private Node<T> current;
+        private Node<T>? current;
 
-        public LinkedListIterator(Node<T> head)
+        public LinkedListIterator(Node<T>? head)
         {
             current = head;
         }
 
-        public bool HasNext()
-        {
-            return current != null;
-        }
+        public bool HasNext() => current != null;
+
 
         public T Next()
         {
             if (current == null)
                 throw new System.InvalidOperationException("No hay más elementos");
 
-            T value = current.Data;
+            T value = current.Value;
             current = current.Next;
             return value;
         }

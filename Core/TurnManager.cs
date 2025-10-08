@@ -4,21 +4,21 @@ namespace CrazyRisk.Core
 {
     public class TurnManager
     {
-        private Queue<Player> turnOrder;
+        private CrazyRisk.DataStructures.Queue<Player> turnOrder;
         public Player CurrentPlayer { get; private set; }
         
-        public TurnManager(LinkedList<Player> players)
+        public TurnManager(CrazyRisk.DataStructures.LinkedList<Player> players)
         {
-            turnOrder = new Queue<Player>();
+            turnOrder = new CrazyRisk.DataStructures.Queue<Player>();
             
             IIterator<Player> iterator = players.GetIterator();
             while (iterator.HasNext())
             {
-                turnOrder.Enqueue(iterator.Next());
+                var p = iterator.Next();
+                turnOrder.Enqueue(p);
             }
-            
-            if (!turnOrder.IsEmpty)
-                CurrentPlayer = turnOrder.Peek();
+
+            CurrentPlayer = turnOrder.Peek();
         }
         
         public void StartTurns()
@@ -26,12 +26,12 @@ namespace CrazyRisk.Core
             // Lógica inicial de turnos
         }
         
-        public Player NextTurn()
+        public Player? NextTurn()
         {
             if (turnOrder.IsEmpty)
                 return null;
                 
-            Player previous = turnOrder.Dequeue();
+            var previous = turnOrder.Dequeue();
             turnOrder.Enqueue(previous);
             CurrentPlayer = turnOrder.Peek();
             

@@ -4,128 +4,115 @@ namespace CrazyRisk.DataStructures
 {
     public class LinkedList<T>
     {
-        private Node<T> head;
+        private Node<T>? head;
+
+        // Para que el iterador inicie desde el primer nodo
+        internal Node<T>? GetHead() => head;
         private int count;
-        
+
         public int Count => count;
         public bool IsEmpty => count == 0;
         
-        internal Node<T> GetHead()
-        {
-            return head;
-        }
-        
+        // Agrega al final
         public void Add(T value)
         {
-            Node<T> newNode = new Node<T>(value);
-            
+            var newNode = new Node<T>(value);
+
             if (head == null)
             {
                 head = newNode;
             }
             else
             {
-                Node<T> current = head;
+                var current = head;
                 while (current.Next != null)
-                {
                     current = current.Next;
-                }
+
                 current.Next = newNode;
             }
+
             count++;
         }
-        
+
+        // Elimina la primera ocurrencia de 'value'
         public bool Remove(T value)
         {
             if (head == null) return false;
-            
-            if (head != null && head.Value != null && head.Value.Equals(value))
+
+            if (object.Equals(head.Value, value))
             {
                 head = head.Next;
                 count--;
                 return true;
             }
-            
-            Node<T> current = head;
-            while (current.Next != null)
-            {
-                if (current.Next.Value.Equals(value))
-                {
-                    current.Next = current.Next.Next;
-                    count--;
-                    return true;
-                }
+
+            var current = head;
+            while (current.Next != null && !object.Equals(current.Next.Value, value))
                 current = current.Next;
-            }
-            
-            return false;
+
+            if (current.Next == null) return false;
+
+            current.Next = current.Next.Next;
+            count--;
+            return true;
         }
-        
-        public Node<T>? Find(T value)
-        {
-            Node<T>? current = head;
-            while (current != null)
-            {
-                if (current.Value.Equals(value))
-                    return current;
-                current = current.Next;
-            }
-            return null;
-        }
-        
+
         public bool Contains(T value)
         {
-            return Find(value) != null;
-        }
-        
-        public T[] ToArray()
-        {
-            T[] array = new T[count];
-            Node<T> current = head;
-            int index = 0;
-            
+            var current = head;
             while (current != null)
             {
-                array[index++] = current.Value;
+                if (object.Equals(current.Value, value))
+                    return true;
                 current = current.Next;
             }
-            
-            return array;
+            return false;
         }
-        
+
+        // Iterador (definido en Iiterator.cs)
         public IIterator<T> GetIterator()
         {
-            return new LinkedListIterator(this);
+            return new LinkedListIterator<T>(head);
         }
 
-        internal int Size()
+        // === utilidades usadas por HashMap/NeutralArmy/Map ===
+
+        // Deja la lista vacía
+        public void Clear()
         {
-            throw new NotImplementedException();
+            head = null;
+            count = 0;
         }
 
-        private class LinkedListIterator : IIterator<T>
+        // Primer elemento que cumpla; default si ninguno
+        public T? Find(Predicate<T> match)
         {
-            private Node<T> current;
-            
-            public LinkedListIterator(LinkedList<T> list)
+            if (match == null) throw new ArgumentNullException(nameof(match));
+            var current = head;
+            while (current != null)
             {
-                current = list.GetHead();
-            }
-            
-            public bool HasNext()
-            {
-                return current != null;
-            }
-            
-            public T Next()
-            {
-                if (current == null)
-                    throw new InvalidOperationException("No more elements");
-                    
-                T value = current.Value;
+                if (match(current.Value))
+                    return current.Value;
                 current = current.Next;
-                return value;
             }
+            return default;
+        }
+
+        // Compat con llamados existentes
+        public int Size() => count;
+
+        // Necesario para NeutralArmy (antes usabas LINQ ToArray)
+        public T[] ToArray()
+        {
+            var arr = new T[count];
+            int i = 0;
+            var current = head;
+            while (current != null)
+            {
+                arr[i++] = current.Value;
+                current = current.Next;
+            }
+            return arr;
         }
     }
 }

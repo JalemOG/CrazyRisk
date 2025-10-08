@@ -2,3 +2,17 @@ C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0
 C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfoInputs.cache
 C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfo.cs
 C:\Users\ramir\OneDrive - Estudiantes ITCR\Documentos\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.csproj.CoreCompileInputs.cache
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Debug\net8.0-windows\CrazyRisk.exe
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Debug\net8.0-windows\CrazyRisk.deps.json
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Debug\net8.0-windows\CrazyRisk.runtimeconfig.json
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Debug\net8.0-windows\CrazyRisk.dll
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\bin\Debug\net8.0-windows\CrazyRisk.pdb
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfoInputs.cache
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfo.cs
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.csproj.CoreCompileInputs.cache
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.dll
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\refint\CrazyRisk.dll
+c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.pdb
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.genruntimeconfig.cache
+C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\ref\CrazyRisk.dll

@@ -4,65 +4,42 @@ namespace CrazyRisk.DataStructures
 {
     public class Stack<T>
     {
-        private Node<T> top;
+        private Node<T>? top;
         private int count;
-        
+
         public int Count => count;
         public bool IsEmpty => count == 0;
-        
+
         public void Push(T value)
         {
-            Node<T> newNode = new Node<T>(value);
-            newNode.Next = top;
-            top = newNode;
+            var n = new Node<T>(value) { Next = top };
+            top = n;
             count++;
         }
-        
+
         public T Pop()
         {
-            if (top == null)
-                throw new InvalidOperationException("Stack is empty");
-                
-            T value = top.Value;
-            top = top.Next;
+            if (top is null)
+                throw new InvalidOperationException("Stack vacío");
+
+            var val = top.Value;
+            top = top.Next;   // puede quedar null (OK: top es nullable)
             count--;
-            return value;
+            return val;
         }
-        
+
         public T Peek()
         {
-            if (top == null)
-                throw new InvalidOperationException("Stack is empty");
-                
+            if (top is null)
+                throw new InvalidOperationException("Stack vacío");
+
             return top.Value;
         }
 
-        // Iterador para compatibilidad con IIterator<T>
-        public IIterator<T> GetIterator()
+        public void Clear()
         {
-            return new StackIterator(this);
-        }
-
-        private class StackIterator : IIterator<T>
-        {
-            private Node<T> current;
-
-            public StackIterator(Stack<T> stack)
-            {
-                current = stack.top;
-            }
-
-            public bool HasNext() => current != null;
-
-            public T Next()
-            {
-                if (current == null)
-                    throw new InvalidOperationException("No more elements");
-
-                T value = current.Value;
-                current = current.Next;
-                return value;
-            }
+            top = null;
+            count = 0;
         }
     }
 }

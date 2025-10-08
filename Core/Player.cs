@@ -6,16 +6,16 @@ namespace CrazyRisk.Core
     {
         public string Alias { get; set; }
         public System.ConsoleColor Color { get; set; }
-        public LinkedList<Territory> Territories { get; set; }
-        public LinkedList<Card> Cards { get; set; }
+        public CrazyRisk.DataStructures.LinkedList<Territory> Territories { get; set; }
+        public CrazyRisk.DataStructures.LinkedList<Card>      Cards       { get; set; }
         public int AvailableTroops { get; set; }
         
         public Player(string alias, System.ConsoleColor color)
         {
             Alias = alias;
             Color = color;
-            Territories = new LinkedList<Territory>();
-            Cards = new LinkedList<Card>();
+            Territories = new CrazyRisk.DataStructures.LinkedList<Territory>();
+            Cards = new CrazyRisk.DataStructures.LinkedList<Card>();
             AvailableTroops = 0;
         }
         

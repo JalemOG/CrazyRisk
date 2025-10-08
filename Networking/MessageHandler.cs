@@ -1,14 +1,16 @@
+using CrazyRisk.Core;
+
 namespace CrazyRisk.Networking
 {
     public class MessageHandler
     {
         private Game game;
-        
+
         public MessageHandler(Game game)
         {
             this.game = game;
         }
-        
+
         public void ProcessMessage(Message msg)
         {
             switch (msg.Action)
