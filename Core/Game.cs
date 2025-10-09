@@ -4,7 +4,7 @@ namespace CrazyRisk.Core
 {
     public class Game
     {
-        // Usa tu LinkedList explícita para evitar ambigüedades
+        // Usa tu LinkedList propia para evitar ambigüedad con System.Collections.Generic
         public CrazyRisk.DataStructures.LinkedList<Player> Players { get; }
             = new CrazyRisk.DataStructures.LinkedList<Player>();
 
@@ -18,24 +18,28 @@ namespace CrazyRisk.Core
 
         public void StartGame()
         {
-            // ⚠️ SI tu Map tiene un método de inicialización propio, úsalo aquí.
-            // Ejemplo (solo si existe): Map.InitializeMap();
-
-            // Reparte territorios entre jugadores
+            // Si tienes inicialización propia del mapa, llámala aquí
+            // (por ejemplo: Map.InitializeMap(); )
             Map.DistributeTerritories(Players);
-
-            // Crea gestor de turnos
             TurnManager = new TurnManager(Players);
-
-            // Estado inicial del ciclo de turnos
             State = GameState.Reinforce;
+        }
+
+        // Punto único para cambiar la fase desde la UI
+        public void SetPhase(GameState newState)
+        {
+            State = newState;
         }
 
         public Player? NextTurn()
         {
-            if (TurnManager is null) return null;
+            if (TurnManager == null) return null;
+
             var next = TurnManager.NextTurn();
-            if (next is not null) State = GameState.Reinforce;
+            if (next != null)
+            {
+                State = GameState.Reinforce;
+            }
             return next;
         }
 
@@ -58,7 +62,9 @@ namespace CrazyRisk.Core
 
         public void HandleMovement(Player player, Territory from, Territory to, int units)
         {
-            if (from.Owner != player || to.Owner != player || from.Troops <= units) return;
+            if (from.Owner != player || to.Owner != player) return;
+            if (units <= 0 || from.Troops <= units) return;
+
             from.RemoveTroops(units);
             to.AddTroops(units);
         }
