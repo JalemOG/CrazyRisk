@@ -12,10 +12,7 @@ namespace CrazyRisk.UI
         private Button btnJoinGame   = null!;
         private Button btnExit       = null!;
 
-        public MainMenuForm()
-        {
-            InitializeComponent();
-        }
+        public MainMenuForm() { InitializeComponent(); }
 
         private void InitializeComponent()
         {
@@ -24,14 +21,7 @@ namespace CrazyRisk.UI
             ClientSize = new Size(600, 420);
 
             mainPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(24) };
-
-            titleLabel = new Label
-            {
-                Text = "CrazyRisk",
-                Font = new Font(FontFamily.GenericSansSerif, 28, FontStyle.Bold),
-                AutoSize = true,
-                Location = new Point(220, 24)
-            };
+            titleLabel = new Label { Text = "CrazyRisk", Font = new Font(FontFamily.GenericSansSerif, 28, FontStyle.Bold), AutoSize = true, Location = new Point(220, 24) };
 
             btnCreateGame = new Button { Text = "Crear partida", Size = new Size(220, 38), Location = new Point(190, 220) };
             btnJoinGame   = new Button { Text = "Unirse a partida", Size = new Size(220, 38), Location = new Point(190, 266) };
@@ -42,10 +32,7 @@ namespace CrazyRisk.UI
             btnExit.Click       += (_, __) => Close();
 
             mainPanel.Controls.Add(titleLabel);
-            mainPanel.Controls.Add(btnCreateGame);
-            mainPanel.Controls.Add(btnJoinGame);
-            mainPanel.Controls.Add(btnExit);
-
+            mainPanel.Controls.AddRange(new Control[] { btnCreateGame, btnJoinGame, btnExit });
             Controls.Add(mainPanel);
         }
 
@@ -53,11 +40,10 @@ namespace CrazyRisk.UI
         {
             using var form = new ServerSetupForm();
             var result = form.ShowDialog(this);
-
             if (result == DialogResult.OK)
             {
-                var cfg = form.GetGameConfig();           // ✅ AQUÍ usamos GetGameConfig()
-                var game = new GameForm(true, cfg);       // host
+                var cfg  = form.GetGameConfig();     // ✅ toma la config del servidor
+                var game = new GameForm(true,  cfg); // host
                 game.Show(this);
             }
         }
@@ -66,11 +52,10 @@ namespace CrazyRisk.UI
         {
             using var form = new ClientConnectForm();
             var result = form.ShowDialog(this);
-
             if (result == DialogResult.OK)
             {
-                var cfg = form.GetGameConfig();           // ✅ idem cliente
-                var game = new GameForm(false, cfg);      // client
+                var cfg  = form.GetGameConfig();     // ✅ toma la config del cliente
+                var game = new GameForm(false, cfg); // client
                 game.Show(this);
             }
         }

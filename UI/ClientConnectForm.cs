@@ -19,8 +19,6 @@ namespace CrazyRisk.UI
         private NetworkManager? network;
 
         public ClientConnectForm() { InitializeComponent(); }
-
-        // 👇 Necesario para que MainMenu pueda leer la config
         public GameConfiguration GetGameConfig() => config;
 
         private void InitializeComponent()
@@ -49,16 +47,9 @@ namespace CrazyRisk.UI
             lblStatus = new Label { AutoSize = true, Location = new Point(160, 245), ForeColor = Color.DimGray, Text = "Estado: desconectado" };
 
             btnConnect.Click += BtnConnect_Click;
-            btnCancel .Click  += BtnCancel_Click;
+            btnCancel .Click  += (_, __) => { try { network?.Close(); } catch { } this.DialogResult = DialogResult.Cancel; Close(); };
 
-            Controls.AddRange(new Control[] {
-                lblName, txtPlayerName,
-                lblColor, cmbPlayerColor,
-                lblIP, txtServerIP,
-                lblPort, txtPort,
-                btnConnect, btnCancel,
-                lblStatus
-            });
+            Controls.AddRange(new Control[] { lblName, txtPlayerName, lblColor, cmbPlayerColor, lblIP, txtServerIP, lblPort, txtPort, btnConnect, btnCancel, lblStatus });
 
             config = new GameConfiguration();
         }
@@ -80,6 +71,7 @@ namespace CrazyRisk.UI
                     return;
                 }
 
+                network?.Close();
                 network = new NetworkManager();
                 network.Connect(host, port);
 
@@ -88,14 +80,12 @@ namespace CrazyRisk.UI
                     lblStatus.ForeColor = Color.ForestGreen;
                     lblStatus.Text = "Estado: conectado";
 
-                    // 👉 Rellenamos config y devolvemos OK al MainMenu
                     config.PlayerName = string.IsNullOrWhiteSpace(txtPlayerName.Text) ? "Jugador" : txtPlayerName.Text;
                     config.ServerIP   = host;
                     config.Port       = port;
-                    // Si tienes PlayerColor en GameConfiguration, setéalo aquí.
 
-                    this.DialogResult = DialogResult.OK;  // 👈 CLAVE
-                    this.Close();                          // vuelve al MainMenu
+                    DialogResult = DialogResult.OK;   // ✅ vuelve al MainMenu
+                    Close();
                 }
                 else
                 {
@@ -107,16 +97,8 @@ namespace CrazyRisk.UI
             {
                 lblStatus.ForeColor = Color.IndianRed;
                 lblStatus.Text = $"Estado: error - {ex.Message}";
-                MessageBox.Show($"Error al conectar: {ex.Message}", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al conectar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void BtnCancel_Click(object? sender, EventArgs e)
-        {
-            try { network?.Close(); } catch { }
-            this.DialogResult = DialogResult.Cancel;   
-            this.Close();
         }
     }
 }

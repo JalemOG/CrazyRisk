@@ -9,28 +9,22 @@ namespace CrazyRisk.UI
 {
     public class ServerSetupForm : Form
     {
-        private TextBox   txtPlayerName     = null!;
-        private ComboBox  cmbPlayerColor    = null!;
-        private TextBox   txtPort           = null!;
-        private CheckBox  chkIncludeNeutral = null!;
-        private Button    btnStart          = null!;
-        private Button    btnCancel         = null!;
-        private Label     lblStatus         = null!;
-        private GameConfiguration config    = null!;
+        private TextBox   txtPlayerName  = null!;
+        private ComboBox  cmbPlayerColor = null!;
+        private TextBox   txtPort        = null!;
+        private Button    btnStart       = null!;
+        private Button    btnCancel      = null!;
+        private Label     lblStatus      = null!;
+        private GameConfiguration config = null!;
 
         private NetworkManager? network;
 
-        public ServerSetupForm()
-        {
-            InitializeComponent();
-        }
-
-        // 👇 Para que MainMenu pueda leer la config
+        public ServerSetupForm() { InitializeComponent(); }
         public GameConfiguration GetGameConfig() => config;
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            try { network?.Close(); } catch { /* ignore */ }
+            try { network?.Close(); } catch { }
             base.OnFormClosed(e);
         }
 
@@ -38,7 +32,7 @@ namespace CrazyRisk.UI
         {
             Text = "CrazyRisk - Crear partida (Servidor)";
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(560, 380);
+            ClientSize = new Size(560, 320);
             Padding = new Padding(16);
 
             var lblName = new Label { Text = "Nombre:", AutoSize = true, Location = new Point(30, 30) };
@@ -51,24 +45,15 @@ namespace CrazyRisk.UI
             var lblPort = new Label { Text = "Puerto:", AutoSize = true, Location = new Point(30, 110) };
             txtPort = new TextBox { Location = new Point(220, 106), Width = 280, Text = "7777" };
 
-            chkIncludeNeutral = new CheckBox { Text = "Incluir ejército neutral", Location = new Point(220, 146), AutoSize = true };
+            btnStart  = new Button { Text = "Iniciar servidor", Location = new Point(220, 160), Size = new Size(140, 32) };
+            btnCancel = new Button { Text = "Cancelar",         Location = new Point(380, 160), Size = new Size(120, 32) };
 
-            btnStart  = new Button { Text = "Iniciar servidor", Location = new Point(220, 200), Size = new Size(140, 32) };
-            btnCancel = new Button { Text = "Cancelar",         Location = new Point(380, 200), Size = new Size(120, 32) };
-
-            lblStatus = new Label { AutoSize = true, Location = new Point(220, 245), ForeColor = Color.DimGray, Text = "Estado: inactivo" };
+            lblStatus = new Label { AutoSize = true, Location = new Point(220, 205), ForeColor = Color.DimGray, Text = "Estado: inactivo" };
 
             btnStart.Click  += BtnStart_Click;
-            btnCancel.Click += BtnCancel_Click;
+            btnCancel.Click += (_, __) => { DialogResult = DialogResult.Cancel; Close(); };
 
-            Controls.AddRange(new Control[] {
-                lblName, txtPlayerName,
-                lblColor, cmbPlayerColor,
-                lblPort, txtPort,
-                chkIncludeNeutral,
-                btnStart, btnCancel,
-                lblStatus
-            });
+            Controls.AddRange(new Control[] { lblName, txtPlayerName, lblColor, cmbPlayerColor, lblPort, txtPort, btnStart, btnCancel, lblStatus });
 
             config = new GameConfiguration();
         }
@@ -83,24 +68,20 @@ namespace CrazyRisk.UI
                     return;
                 }
 
-                // si ya estaba uno abierto, ciérralo
                 network?.Close();
                 network = new NetworkManager();
-                network.StartServer(port, IPAddress.Any);
+                network.StartServer(port, IPAddress.Any);          // escucha
 
                 lblStatus.ForeColor = Color.ForestGreen;
                 lblStatus.Text = $"Escuchando en {network.LocalEndpoint}";
 
-                // Rellenar configuración que usará GameForm
-                config.PlayerName     = string.IsNullOrWhiteSpace(txtPlayerName.Text) ? "Servidor" : txtPlayerName.Text;
-                config.ServerIP       = "0.0.0.0";
-                config.Port           = port;
-                config.IncludeNeutral = chkIncludeNeutral.Checked;
-                // Si tu GameConfiguration tiene color: config.PlayerColor = ...
+                config.PlayerName = string.IsNullOrWhiteSpace(txtPlayerName.Text) ? "Servidor" : txtPlayerName.Text;
+                config.ServerIP   = "0.0.0.0";
+                config.Port       = port;
+                // Si tienes color en GameConfiguration -> asigna aquí
 
-                // 👉 Devolver OK al MainMenu y cerrar este diálogo
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                DialogResult = DialogResult.OK;  // ✅ deja que MainMenu abra GameForm
+                Close();
             }
             catch (SocketException se) when (se.SocketErrorCode == SocketError.AddressAlreadyInUse)
             {
@@ -113,16 +94,8 @@ namespace CrazyRisk.UI
             {
                 lblStatus.ForeColor = Color.IndianRed;
                 lblStatus.Text = $"Error: {ex.Message}";
-                MessageBox.Show($"Error al iniciar: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al iniciar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void BtnCancel_Click(object? sender, EventArgs e)
-        {
-            try { network?.Close(); } catch { /* ignore */ }
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
         }
     }
 }
