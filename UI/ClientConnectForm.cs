@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
 using CrazyRisk.Networking;
@@ -118,5 +119,7 @@ namespace CrazyRisk.UI
             DialogResult = DialogResult.Cancel;
             Close();
         }
+        
+        public GameConfiguration GetGameConfig() => config;
     }
 }

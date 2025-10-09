@@ -7,11 +7,11 @@ namespace CrazyRisk.UI
     public class MainMenuForm : Form
     {
         // Controles (null-forgiving para evitar warnings con Nullable)
-        private Panel      mainPanel      = null!;
-        private Label      titleLabel     = null!;
-        private Button     btnCreateGame  = null!;
-        private Button     btnJoinGame    = null!;
-        private Button     btnExit        = null!;
+        private Panel mainPanel = null!;
+        private Label titleLabel = null!;
+        private Button btnCreateGame = null!;
+        private Button btnJoinGame = null!;
+        private Button btnExit = null!;
         private PictureBox logoPictureBox = null!;
 
         public MainMenuForm()
@@ -98,7 +98,12 @@ namespace CrazyRisk.UI
         private void BtnJoinGame_Click(object? sender, EventArgs e)
         {
             using var form = new ClientConnectForm();
-            form.ShowDialog(this);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                var cfg = form.GetGameConfig();           // ← toma la IP/puerto/nombre
+                var game = new GameForm(false, cfg);      // false = soy cliente
+                game.Show(this);                          // o ShowDialog(this) si quieres modal
+            }
         }
 
         private void BtnExit_Click(object? sender, EventArgs e)
