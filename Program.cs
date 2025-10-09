@@ -1,4 +1,5 @@
 using System;
+using System.Threading;           // 👈 necesario para ThreadExceptionEventArgs
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,7 +29,6 @@ namespace CrazyRisk
             catch (Exception ex)
             {
                 ShowFatal(ex);
-                // re-lanzamos para que quede en logs del SO si aplica
                 throw;
             }
         }
@@ -54,28 +54,20 @@ namespace CrazyRisk
         {
             try
             {
-                MessageBox.Show(
-                    $"{ex.Message}\n\n{ex}",
-                    title,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MessageBox.Show($"{ex.Message}\n\n{ex}", title,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch { /* evita crash si no hay contexto UI */ }
+            catch { }
         }
 
         private static void ShowFatal(Exception ex)
         {
             try
             {
-                MessageBox.Show(
-                    $"Se produjo un error fatal y la aplicación se cerrará.\n\n{ex.Message}\n\n{ex}",
-                    "Error fatal",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Stop
-                );
+                MessageBox.Show($"Se produjo un error fatal y la aplicación se cerrará.\n\n{ex.Message}\n\n{ex}",
+                    "Error fatal", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
-            catch { /* evita crash si no hay contexto UI */ }
+            catch { }
         }
     }
 }

@@ -15,19 +15,27 @@ namespace CrazyRisk.Networking
         {
             switch (msg.Action)
             {
+                case MessageAction.StartGame:
+                    game.StartGame();
+                    break;
+
                 case MessageAction.Attack:
-                    // Procesar ataque
+                    // TODO
                     break;
+
                 case MessageAction.Reinforce:
-                    // Procesar refuerzos
+                    // TODO
                     break;
+
                 case MessageAction.Move:
-                    // Procesar movimiento
+                    // TODO
                     break;
+
                 case MessageAction.EndTurn:
                     game.NextTurn();
                     break;
             }
+        
         }
     }
 }
