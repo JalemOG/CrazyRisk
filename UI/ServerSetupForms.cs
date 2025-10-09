@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using CrazyRisk.Networking;
 
@@ -17,7 +18,7 @@ namespace CrazyRisk.UI
         private GameConfiguration config    = null!;
 
         // Mantenemos la instancia viva mientras la ventana esté abierta
-        private NetworkManager network = null!;
+        private NetworkManager? network;
 
         public ServerSetupForm()
         {
@@ -80,25 +81,36 @@ namespace CrazyRisk.UI
                 {
                     lblStatus.ForeColor = Color.ForestGreen;
                     lblStatus.Text = $"Estado: escuchando en {network.LocalEndpoint}";
-                    MessageBox.Show($"✅ Servidor escuchando en {network.LocalEndpoint}", "Servidor iniciado",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     lblStatus.ForeColor = Color.IndianRed;
                     lblStatus.Text = "Estado: no se pudo iniciar";
-                    MessageBox.Show("❌ No se pudo iniciar el servidor.", "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
-                // Completa config si la usas para el proceso de juego
-                config.PlayerName = txtPlayerName.Text;
-                config.ServerIP = "127.0.0.1";
-                config.Port = port;
-                config.IncludeNeutral = chkIncludeNeutral.Checked;
+                // Espera un cliente en segundo plano (hasta 60s) y actualiza UI cuando llegue
+                _ = Task.Run(() =>
+                {
+                    if (network!.TryAcceptClient(60000))
+                    {
+                        try
+                        {
+                            Invoke(() =>
+                            {
+                                lblStatus.ForeColor = Color.ForestGreen;
+                                lblStatus.Text = $"Cliente conectado: {network.RemoteEndpoint}";
+                            });
+                        }
+                        catch { /* si el form ya se cerró */ }
+                    }
+                });
 
-                DialogResult = DialogResult.OK; // si quieres cerrar aquí
-                // Close();
+                // Rellenar config si la usas luego
+                config.PlayerName = txtPlayerName.Text;
+                config.ServerIP   = "0.0.0.0";
+                config.Port       = port;
+                config.IncludeNeutral = chkIncludeNeutral.Checked;
             }
             catch (Exception ex)
             {

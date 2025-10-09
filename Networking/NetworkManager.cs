@@ -6,7 +6,7 @@ namespace CrazyRisk.Networking
 {
     /// <summary>
     /// Maneja servidor/cliente TCP y operaciones de envío/recepción de forma segura.
-    /// Incluye propiedades para verificar si el servidor está escuchando.
+    /// Incluye propiedades para verificar si el servidor está escuchando y el endpoint remoto.
     /// </summary>
     public class NetworkManager : IDisposable
     {
@@ -17,20 +17,18 @@ namespace CrazyRisk.Networking
         public bool IsServer { get; private set; }
         public bool IsConnected => stream is not null && client is not null && client.Connected;
 
-        /// <summary>
-        /// True si el TcpListener está activo y ligado a un endpoint.
-        /// </summary>
+        /// <summary>True si el TcpListener está activo.</summary>
         public bool IsListening => server?.Server?.IsBound == true;
 
-        /// <summary>
-        /// Endpoint local del servidor (ip:puerto) si está activo.
-        /// </summary>
+        /// <summary>Endpoint local del servidor (ip:puerto) si está activo.</summary>
         public IPEndPoint? LocalEndpoint =>
             server is null ? null : (IPEndPoint)server.LocalEndpoint;
 
-        /// <summary>
-        /// Inicia un servidor TCP en el puerto indicado.
-        /// </summary>
+        /// <summary>Endpoint remoto del cliente conectado (si existe).</summary>
+        public IPEndPoint? RemoteEndpoint =>
+            client?.Client?.RemoteEndPoint as IPEndPoint;
+
+        /// <summary>Inicia un servidor TCP en el puerto indicado.</summary>
         public void StartServer(int port, IPAddress? address = null, int backlog = 10)
         {
             if (server is not null)
@@ -43,9 +41,7 @@ namespace CrazyRisk.Networking
             server.Start(backlog);
         }
 
-        /// <summary>
-        /// Acepta un cliente entrante (bloqueante).
-        /// </summary>
+        /// <summary>Acepta un cliente entrante (bloqueante).</summary>
         public void AcceptClient()
         {
             if (server is null)
@@ -77,9 +73,7 @@ namespace CrazyRisk.Networking
             return false;
         }
 
-        /// <summary>
-        /// Conecta como cliente a un host/puerto.
-        /// </summary>
+        /// <summary>Conecta como cliente a un host/puerto.</summary>
         public void Connect(string host, int port)
         {
             if (client is not null)
@@ -93,9 +87,7 @@ namespace CrazyRisk.Networking
             stream = client.GetStream();
         }
 
-        /// <summary>
-        /// Envía bytes por el stream activo.
-        /// </summary>
+        /// <summary>Envía bytes por el stream activo.</summary>
         public void Send(byte[] data, int offset = 0, int? count = null)
         {
             if (stream is null)
@@ -106,9 +98,7 @@ namespace CrazyRisk.Networking
             stream.Flush();
         }
 
-        /// <summary>
-        /// Lee bytes del stream activo y devuelve la cantidad leída.
-        /// </summary>
+        /// <summary>Lee bytes del stream activo y devuelve la cantidad leída.</summary>
         public int Receive(byte[] buffer, int offset = 0, int? count = null)
         {
             if (stream is null)
@@ -118,9 +108,7 @@ namespace CrazyRisk.Networking
             return stream.Read(buffer, offset, len);
         }
 
-        /// <summary>
-        /// Cierra conexiones y libera recursos.
-        /// </summary>
+        /// <summary>Cierra conexiones y libera recursos.</summary>
         public void Close()
         {
             try { stream?.Close(); } catch { /* ignore */ }

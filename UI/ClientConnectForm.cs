@@ -16,7 +16,7 @@ namespace CrazyRisk.UI
         private Label     lblStatus      = null!;
         private GameConfiguration config = null!;
 
-        private NetworkManager network = null!;
+        private NetworkManager? network;
 
         public ClientConnectForm()
         {
@@ -46,7 +46,7 @@ namespace CrazyRisk.UI
             btnConnect = new Button { Text = "Conectar", Location = new Point(160, 200), Size = new Size(120, 32) };
             btnCancel  = new Button { Text = "Cancelar", Location = new Point(300, 200), Size = new Size(120, 32) };
 
-            lblStatus = new Label { AutoSize = true, Location = new Point(160, 245), ForeColor = System.Drawing.Color.DimGray, Text = "Estado: desconectado" };
+            lblStatus = new Label { AutoSize = true, Location = new Point(160, 245), ForeColor = Color.DimGray, Text = "Estado: desconectado" };
 
             btnConnect.Click += BtnConnect_Click;
             btnCancel.Click += BtnCancel_Click;
@@ -85,21 +85,19 @@ namespace CrazyRisk.UI
 
                 if (network.IsConnected)
                 {
-                    lblStatus.ForeColor = System.Drawing.Color.ForestGreen;
+                    lblStatus.ForeColor = Color.ForestGreen;
                     lblStatus.Text = "Estado: conectado";
-                    MessageBox.Show("✅ Conectado al servidor", "Conectado",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     config.PlayerName = txtPlayerName.Text;
                     config.ServerIP   = host;
                     config.Port       = port;
 
-                    DialogResult = DialogResult.OK; // si quieres cerrar aquí
+                    DialogResult = DialogResult.OK; // si deseas cerrar al conectar
                     // Close();
                 }
                 else
                 {
-                    lblStatus.ForeColor = System.Drawing.Color.IndianRed;
+                    lblStatus.ForeColor = Color.IndianRed;
                     lblStatus.Text = "Estado: no conectado";
                     MessageBox.Show("❌ No se pudo conectar al servidor.", "Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -107,7 +105,7 @@ namespace CrazyRisk.UI
             }
             catch (Exception ex)
             {
-                lblStatus.ForeColor = System.Drawing.Color.IndianRed;
+                lblStatus.ForeColor = Color.IndianRed;
                 lblStatus.Text = $"Estado: error - {ex.Message}";
                 MessageBox.Show($"Error al conectar: {ex.Message}", "Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
