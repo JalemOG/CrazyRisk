@@ -6,13 +6,11 @@ namespace CrazyRisk.UI
 {
     public class MainMenuForm : Form
     {
-        // Controles (null-forgiving para evitar warnings con Nullable)
-        private Panel mainPanel = null!;
-        private Label titleLabel = null!;
+        private Panel  mainPanel  = null!;
+        private Label  titleLabel = null!;
         private Button btnCreateGame = null!;
-        private Button btnJoinGame = null!;
-        private Button btnExit = null!;
-        private PictureBox logoPictureBox = null!;
+        private Button btnJoinGame   = null!;
+        private Button btnExit       = null!;
 
         public MainMenuForm()
         {
@@ -21,20 +19,12 @@ namespace CrazyRisk.UI
 
         private void InitializeComponent()
         {
-            // Ventana
             Text = "CrazyRisk - Menú Principal";
             StartPosition = FormStartPosition.CenterScreen;
             ClientSize = new Size(600, 420);
-            MinimumSize = new Size(600, 420);
 
-            // Panel principal
-            mainPanel = new Panel
-            {
-                Dock = DockStyle.Fill,
-                Padding = new Padding(24)
-            };
+            mainPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(24) };
 
-            // Título
             titleLabel = new Label
             {
                 Text = "CrazyRisk",
@@ -43,45 +33,15 @@ namespace CrazyRisk.UI
                 Location = new Point(220, 24)
             };
 
-            // Logo (opcional: asigna imagen si tienes recursos)
-            logoPictureBox = new PictureBox
-            {
-                Size = new Size(120, 120),
-                Location = new Point(240, 72),
-                SizeMode = PictureBoxSizeMode.Zoom
-                // Image = Properties.Resources.Logo; // si tienes un recurso
-            };
+            btnCreateGame = new Button { Text = "Crear partida", Size = new Size(220, 38), Location = new Point(190, 220) };
+            btnJoinGame   = new Button { Text = "Unirse a partida", Size = new Size(220, 38), Location = new Point(190, 266) };
+            btnExit       = new Button { Text = "Salir", Size = new Size(220, 38), Location = new Point(190, 312) };
 
-            // Botón: Crear partida
-            btnCreateGame = new Button
-            {
-                Text = "Crear partida",
-                Size = new Size(220, 38),
-                Location = new Point(190, 220)
-            };
             btnCreateGame.Click += BtnCreateGame_Click;
+            btnJoinGame.Click   += BtnJoinGame_Click;
+            btnExit.Click       += (_, __) => Close();
 
-            // Botón: Unirse a partida
-            btnJoinGame = new Button
-            {
-                Text = "Unirse a partida",
-                Size = new Size(220, 38),
-                Location = new Point(190, 266)
-            };
-            btnJoinGame.Click += BtnJoinGame_Click;
-
-            // Botón: Salir
-            btnExit = new Button
-            {
-                Text = "Salir",
-                Size = new Size(220, 38),
-                Location = new Point(190, 312)
-            };
-            btnExit.Click += BtnExit_Click;
-
-            // Agregar controles
             mainPanel.Controls.Add(titleLabel);
-            mainPanel.Controls.Add(logoPictureBox);
             mainPanel.Controls.Add(btnCreateGame);
             mainPanel.Controls.Add(btnJoinGame);
             mainPanel.Controls.Add(btnExit);
@@ -92,23 +52,27 @@ namespace CrazyRisk.UI
         private void BtnCreateGame_Click(object? sender, EventArgs e)
         {
             using var form = new ServerSetupForm();
-            form.ShowDialog(this);
+            var result = form.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                var cfg = form.GetGameConfig();           // ✅ AQUÍ usamos GetGameConfig()
+                var game = new GameForm(true, cfg);       // host
+                game.Show(this);
+            }
         }
 
         private void BtnJoinGame_Click(object? sender, EventArgs e)
         {
             using var form = new ClientConnectForm();
-            if (form.ShowDialog(this) == DialogResult.OK)
-            {
-                var cfg = form.GetGameConfig();           // ← toma la IP/puerto/nombre
-                var game = new GameForm(false, cfg);      // false = soy cliente
-                game.Show(this);                          // o ShowDialog(this) si quieres modal
-            }
-        }
+            var result = form.ShowDialog(this);
 
-        private void BtnExit_Click(object? sender, EventArgs e)
-        {
-            Close();
+            if (result == DialogResult.OK)
+            {
+                var cfg = form.GetGameConfig();           // ✅ idem cliente
+                var game = new GameForm(false, cfg);      // client
+                game.Show(this);
+            }
         }
     }
 }

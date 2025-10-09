@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
 using CrazyRisk.Networking;
@@ -19,10 +18,10 @@ namespace CrazyRisk.UI
 
         private NetworkManager? network;
 
-        public ClientConnectForm()
-        {
-            InitializeComponent();
-        }
+        public ClientConnectForm() { InitializeComponent(); }
+
+        // 👇 Necesario para que MainMenu pueda leer la config
+        public GameConfiguration GetGameConfig() => config;
 
         private void InitializeComponent()
         {
@@ -50,7 +49,7 @@ namespace CrazyRisk.UI
             lblStatus = new Label { AutoSize = true, Location = new Point(160, 245), ForeColor = Color.DimGray, Text = "Estado: desconectado" };
 
             btnConnect.Click += BtnConnect_Click;
-            btnCancel.Click += BtnCancel_Click;
+            btnCancel .Click  += BtnCancel_Click;
 
             Controls.AddRange(new Control[] {
                 lblName, txtPlayerName,
@@ -89,19 +88,19 @@ namespace CrazyRisk.UI
                     lblStatus.ForeColor = Color.ForestGreen;
                     lblStatus.Text = "Estado: conectado";
 
-                    config.PlayerName = txtPlayerName.Text;
+                    // 👉 Rellenamos config y devolvemos OK al MainMenu
+                    config.PlayerName = string.IsNullOrWhiteSpace(txtPlayerName.Text) ? "Jugador" : txtPlayerName.Text;
                     config.ServerIP   = host;
                     config.Port       = port;
+                    // Si tienes PlayerColor en GameConfiguration, setéalo aquí.
 
-                    DialogResult = DialogResult.OK; // si deseas cerrar al conectar
-                    // Close();
+                    this.DialogResult = DialogResult.OK;  // 👈 CLAVE
+                    this.Close();                          // vuelve al MainMenu
                 }
                 else
                 {
                     lblStatus.ForeColor = Color.IndianRed;
                     lblStatus.Text = "Estado: no conectado";
-                    MessageBox.Show("❌ No se pudo conectar al servidor.", "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -115,11 +114,9 @@ namespace CrazyRisk.UI
 
         private void BtnCancel_Click(object? sender, EventArgs e)
         {
-            try { network?.Close(); } catch { /* ignore */ }
-            DialogResult = DialogResult.Cancel;
-            Close();
+            try { network?.Close(); } catch { }
+            this.DialogResult = DialogResult.Cancel;   
+            this.Close();
         }
-        
-        public GameConfiguration GetGameConfig() => config;
     }
 }
