@@ -16,3 +16,18 @@ c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\refin
 c:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.pdb
 C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\CrazyRisk.genruntimeconfig.cache
 C:\Users\USUARIO II 2025\Downloads\CrazyRisk-Core\obj\Debug\net8.0-windows\ref\CrazyRisk.dll
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\bin\Debug\net8.0-windows\CrazyRisk.exe
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\bin\Debug\net8.0-windows\CrazyRisk.deps.json
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\bin\Debug\net8.0-windows\CrazyRisk.runtimeconfig.json
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\bin\Debug\net8.0-windows\CrazyRisk.dll
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\bin\Debug\net8.0-windows\CrazyRisk.pdb
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfoInputs.cache
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.AssemblyInfo.cs
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.csproj.CoreCompileInputs.cache
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.sourcelink.json
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.dll
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\refint\CrazyRisk.dll
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.pdb
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\CrazyRisk.genruntimeconfig.cache
+C:\Users\ramir\OneDrive - Estudiantes ITCR\Escritorio\xd\CrazyRisk\obj\Debug\net8.0-windows\ref\CrazyRisk.dll

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\CrazyRisk.csproj": {}
+    "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\CrazyRisk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\CrazyRisk.csproj": {
+    "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\CrazyRisk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\CrazyRisk.csproj",
+        "projectUniqueName": "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\CrazyRisk.csproj",
         "projectName": "CrazyRisk",
-        "projectPath": "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\CrazyRisk.csproj",
-        "packagesPath": "C:\\Users\\USUARIO II 2025\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\obj\\",
+        "projectPath": "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\CrazyRisk.csproj",
+        "packagesPath": "C:\\Users\\ramir\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\USUARIO II 2025\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\ramir\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0-windows"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -54,24 +53,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.20, 8.0.20]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
@@ -80,7 +61,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

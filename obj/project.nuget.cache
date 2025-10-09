@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "euW9NKqJlA0=",
+  "dgSpecHash": "3p3VaoEqr+U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\USUARIO II 2025\\Downloads\\CrazyRisk-Core\\CrazyRisk.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\USUARIO II 2025\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.20\\microsoft.netcore.app.ref.8.0.20.nupkg.sha512",
-    "C:\\Users\\USUARIO II 2025\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.20\\microsoft.windowsdesktop.app.ref.8.0.20.nupkg.sha512",
-    "C:\\Users\\USUARIO II 2025\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.20\\microsoft.aspnetcore.app.ref.8.0.20.nupkg.sha512",
-    "C:\\Users\\USUARIO II 2025\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.20\\microsoft.netcore.app.host.win-x64.8.0.20.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\ramir\\OneDrive - Estudiantes ITCR\\Escritorio\\xd\\CrazyRisk\\CrazyRisk.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
