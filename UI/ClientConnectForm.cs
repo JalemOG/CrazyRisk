@@ -1,19 +1,22 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CrazyRisk.Networking;
 
 namespace CrazyRisk.UI
 {
     public class ClientConnectForm : Form
     {
-        // Campos inicializados con null-forgiving para evitar CS8618
         private TextBox   txtPlayerName  = null!;
         private ComboBox  cmbPlayerColor = null!;
         private TextBox   txtServerIP    = null!;
         private TextBox   txtPort        = null!;
         private Button    btnConnect     = null!;
         private Button    btnCancel      = null!;
-        private GameConfiguration config = null!; // si tu clase está en este namespace
+        private Label     lblStatus      = null!;
+        private GameConfiguration config = null!;
+
+        private NetworkManager network = null!;
 
         public ClientConnectForm()
         {
@@ -24,52 +27,96 @@ namespace CrazyRisk.UI
         {
             Text = "CrazyRisk - Conectarse a partida";
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(480, 300);
+            ClientSize = new Size(520, 320);
             Padding = new Padding(16);
 
             var lblName = new Label { Text = "Nombre:", AutoSize = true, Location = new Point(30, 30) };
-            txtPlayerName = new TextBox { Location = new Point(160, 26), Width = 250 };
+            txtPlayerName = new TextBox { Location = new Point(160, 26), Width = 300 };
 
             var lblColor = new Label { Text = "Color:", AutoSize = true, Location = new Point(30, 70) };
-            cmbPlayerColor = new ComboBox { Location = new Point(160, 66), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            cmbPlayerColor = new ComboBox { Location = new Point(160, 66), Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
             cmbPlayerColor.Items.AddRange(new object[] { "Rojo", "Azul", "Verde", "Amarillo", "Negro" });
 
             var lblIP = new Label { Text = "Servidor (IP):", AutoSize = true, Location = new Point(30, 110) };
-            txtServerIP = new TextBox { Location = new Point(160, 106), Width = 250 };
+            txtServerIP = new TextBox { Location = new Point(160, 106), Width = 300, Text = "127.0.0.1" };
 
             var lblPort = new Label { Text = "Puerto:", AutoSize = true, Location = new Point(30, 150) };
-            txtPort = new TextBox { Location = new Point(160, 146), Width = 250, Text = "7777" };
+            txtPort = new TextBox { Location = new Point(160, 146), Width = 300, Text = "7777" };
 
-            btnConnect = new Button { Text = "Conectar", Location = new Point(160, 200), Size = new Size(110, 32) };
-            btnCancel  = new Button { Text = "Cancelar", Location = new Point(300, 200), Size = new Size(110, 32) };
+            btnConnect = new Button { Text = "Conectar", Location = new Point(160, 200), Size = new Size(120, 32) };
+            btnCancel  = new Button { Text = "Cancelar", Location = new Point(300, 200), Size = new Size(120, 32) };
+
+            lblStatus = new Label { AutoSize = true, Location = new Point(160, 245), ForeColor = System.Drawing.Color.DimGray, Text = "Estado: desconectado" };
 
             btnConnect.Click += BtnConnect_Click;
             btnCancel.Click += BtnCancel_Click;
 
-            Controls.Add(lblName);
-            Controls.Add(txtPlayerName);
-            Controls.Add(lblColor);
-            Controls.Add(cmbPlayerColor);
-            Controls.Add(lblIP);
-            Controls.Add(txtServerIP);
-            Controls.Add(lblPort);
-            Controls.Add(txtPort);
-            Controls.Add(btnConnect);
-            Controls.Add(btnCancel);
+            Controls.AddRange(new Control[] {
+                lblName, txtPlayerName,
+                lblColor, cmbPlayerColor,
+                lblIP, txtServerIP,
+                lblPort, txtPort,
+                btnConnect, btnCancel,
+                lblStatus
+            });
 
             config = new GameConfiguration();
         }
 
         private void BtnConnect_Click(object? sender, EventArgs e)
         {
-            // Aquí validas y asignas a 'config' o lanzas evento para el exterior
-            // p.ej.: config.PlayerName = txtPlayerName.Text; etc.
-            DialogResult = DialogResult.OK;
-            Close();
+            try
+            {
+                if (!int.TryParse(txtPort.Text, out int port) || port <= 0 || port > 65535)
+                {
+                    MessageBox.Show("Puerto inválido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var host = txtServerIP.Text.Trim();
+                if (string.IsNullOrWhiteSpace(host))
+                {
+                    MessageBox.Show("IP/host inválido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                network = new NetworkManager();
+                network.Connect(host, port);
+
+                if (network.IsConnected)
+                {
+                    lblStatus.ForeColor = System.Drawing.Color.ForestGreen;
+                    lblStatus.Text = "Estado: conectado";
+                    MessageBox.Show("✅ Conectado al servidor", "Conectado",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    config.PlayerName = txtPlayerName.Text;
+                    config.ServerIP   = host;
+                    config.Port       = port;
+
+                    DialogResult = DialogResult.OK; // si quieres cerrar aquí
+                    // Close();
+                }
+                else
+                {
+                    lblStatus.ForeColor = System.Drawing.Color.IndianRed;
+                    lblStatus.Text = "Estado: no conectado";
+                    MessageBox.Show("❌ No se pudo conectar al servidor.", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = System.Drawing.Color.IndianRed;
+                lblStatus.Text = $"Estado: error - {ex.Message}";
+                MessageBox.Show($"Error al conectar: {ex.Message}", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnCancel_Click(object? sender, EventArgs e)
         {
+            try { network?.Close(); } catch { /* ignore */ }
             DialogResult = DialogResult.Cancel;
             Close();
         }

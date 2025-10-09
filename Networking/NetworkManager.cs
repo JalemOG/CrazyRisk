@@ -5,8 +5,8 @@ using System.Net.Sockets;
 namespace CrazyRisk.Networking
 {
     /// <summary>
-    /// Encapsula la conexión como servidor o cliente y expone operaciones seguras sobre el stream.
-    /// Evita nullability warnings validando server/client/stream antes de usarlos.
+    /// Maneja servidor/cliente TCP y operaciones de envío/recepción de forma segura.
+    /// Incluye propiedades para verificar si el servidor está escuchando.
     /// </summary>
     public class NetworkManager : IDisposable
     {
@@ -16,6 +16,17 @@ namespace CrazyRisk.Networking
 
         public bool IsServer { get; private set; }
         public bool IsConnected => stream is not null && client is not null && client.Connected;
+
+        /// <summary>
+        /// True si el TcpListener está activo y ligado a un endpoint.
+        /// </summary>
+        public bool IsListening => server?.Server?.IsBound == true;
+
+        /// <summary>
+        /// Endpoint local del servidor (ip:puerto) si está activo.
+        /// </summary>
+        public IPEndPoint? LocalEndpoint =>
+            server is null ? null : (IPEndPoint)server.LocalEndpoint;
 
         /// <summary>
         /// Inicia un servidor TCP en el puerto indicado.
@@ -42,6 +53,28 @@ namespace CrazyRisk.Networking
 
             client = server.AcceptTcpClient();
             stream = client.GetStream();
+        }
+
+        /// <summary>
+        /// Intenta aceptar un cliente durante un tiempo máximo (no bloquea indefinidamente).
+        /// </summary>
+        public bool TryAcceptClient(int millisecondsTimeout)
+        {
+            if (server is null)
+                throw new InvalidOperationException("Servidor no iniciado. Llama a StartServer primero.");
+
+            var start = DateTime.UtcNow;
+            while ((DateTime.UtcNow - start).TotalMilliseconds < millisecondsTimeout)
+            {
+                if (server.Pending())
+                {
+                    client = server.AcceptTcpClient();
+                    stream = client.GetStream();
+                    return true;
+                }
+                System.Threading.Thread.Sleep(25);
+            }
+            return false;
         }
 
         /// <summary>
